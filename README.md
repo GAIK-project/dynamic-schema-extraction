@@ -148,7 +148,7 @@ Document 2:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/dynamic-schema-extraction
+git clone https://github.com/GAIK-project/dynamic-schema-extraction
 cd dynamic-schema-extraction
 
 # Install dependencies
@@ -182,18 +182,38 @@ documents = [doc1_text, doc2_text, doc3_text]
 results = dynamic_extraction_workflow(description, documents)
 ```
 
-## Development
+## Advanced: Custom Field Descriptions
 
-```bash
-# Check for errors
-uv run ruff check .
+Want more control? Define field specifications manually with precise extraction instructions:
 
-# Auto-fix errors
-uv run ruff check --fix .
+```python
+from main import FieldSpec, ExtractionRequirements, create_extraction_model, extract_from_document
 
-# Format code
-uv run ruff format .
+# Define exact field specs with custom descriptions
+custom_fields = [
+    FieldSpec(
+        field_name="invoice_number",
+        field_type="str",
+        description="Extract invoice ID. Look for 'Invoice #', 'INV-', or similar patterns",
+        required=True
+    ),
+    FieldSpec(
+        field_name="amount",
+        field_type="float",
+        description="Total in USD. Convert EUR (×1.1) and GBP (×1.25) if needed",
+        required=True
+    ),
+]
+
+# Create schema from custom specs
+requirements = ExtractionRequirements(use_case_name="Invoice", fields=custom_fields)
+ExtractionModel = create_extraction_model(requirements)
+
+# Use for extraction
+result = extract_from_document(document, ExtractionModel)
 ```
+
+**Benefits:** Save and reuse schemas, fine-tune extraction logic, share specs across teams.
 
 ## Resources
 
