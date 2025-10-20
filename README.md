@@ -74,6 +74,7 @@ result = response.choices[0].message.parsed  # Already validated ✓
 - ✅ **Cost effective** - Fewer tokens than traditional prompting
 - ✅ **Automatic retries** - API handles parsing failures
 - ✅ **Field descriptions** guide extraction behavior
+- ✅ **Minimal prompting** - Schema replaces most prompt engineering
 
 ## Field Descriptions = Extraction Instructions
 
@@ -94,6 +95,16 @@ class Extract(BaseModel):
 ```
 
 The `description` field tells the LLM **how** to extract and format each field.
+
+**No complex prompts needed!** Just pass the document - the schema handles all instructions:
+
+```python
+# That's it - schema does the rest!
+response = client.beta.chat.completions.parse(
+    messages=[{"role": "user", "content": document}],
+    response_format=Extract
+)
+```
 
 ## Example Output
 

@@ -59,20 +59,7 @@ def parse_user_requirements(user_description: str) -> ExtractionRequirements:
     response = client.beta.chat.completions.parse(
         model="gpt-4.1",
         messages=[
-            {
-                "role": "system",
-                "content": """You are an expert at analyzing extraction requirements.
-                Parse the user's description and identify all fields they want to extract.
-                Convert field names to snake_case and choose appropriate types.""",
-            },
-            {
-                "role": "user",
-                "content": f"""Parse this extraction requirement:
-                
-{user_description}
-
-Identify all fields to extract, their types, and descriptions.""",
-            },
+            {"role": "user", "content": user_description},
         ],
         response_format=ExtractionRequirements,
     )
@@ -162,10 +149,6 @@ def extract_from_document(
     response = client.beta.chat.completions.parse(
         model="gpt-4.1",
         messages=[
-            {
-                "role": "system",
-                "content": "Extract the requested information from the document.",
-            },
             {"role": "user", "content": document_text},
         ],
         response_format=extraction_model,
